@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+publish/
+
+# Binary images are generated from the versioned .b64 files at build time
+SnowWindows/Assets/*.png
+SnowWindows/Assets/*.ico
