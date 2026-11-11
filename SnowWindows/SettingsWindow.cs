@@ -293,6 +293,7 @@ internal sealed class SettingsWindow : Window
         var rates = string.Join("  ·  ", Screen.AllScreens.Select((screen, index) => { int rate = Native.DisplayRefreshRate(screen.DeviceName); return rate > 0 ? $"Монитор {index + 1}: {rate} Гц" : $"Монитор {index + 1}: частота неизвестна"; }));
         p.Children.Add(new TextBlock { Text = rates, Foreground = Muted, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 12, 0, 0) });
         p.Children.Add(new TextBlock { Text = "При развёрнутом или полноэкранном активном окне снег на этом мониторе приостанавливается.", Foreground = Muted, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 8, 0, 0) });
+        p.Children.Add(new TextBlock { Text = "Создатель Snow Windows: WhyNot-png", Foreground = Muted, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 12, 0, 0) });
     }
     private const string ButtonXaml = """
 <Style xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="{x:Type Button}">

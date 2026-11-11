@@ -9,6 +9,10 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>SnowWindows</AssemblyName>
+    <Authors>WhyNot-png</Authors>
+    <Company>WhyNot-png</Company>
+    <Product>Snow Windows</Product>
+    <Copyright>© 2026 WhyNot-png. Все права защищены.</Copyright>
     <ApplicationIcon>Assets/snow.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
