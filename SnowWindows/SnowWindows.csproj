@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>SnowWindows</AssemblyName>
+    <ApplicationIcon>Assets/snow.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Assets/snow-icon-preview.png" />
+    <Resource Include="Assets/snowplow.png" />
+    <Resource Include="Assets/snowman.png" />
+    <Resource Include="Assets/holiday-sprig.png" />
+  </ItemGroup>
+  <!-- Text-encoded assets are restored before build, including on a fresh clone. -->
+  <UsingTask TaskName="RestoreSnowAssets" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup><SourceFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" /></ParameterGroup>
+    <Task><Using Namespace="System" /><Using Namespace="System.IO" /><Code Type="Fragment" Language="cs"><![CDATA[
+      var groups = new System.Collections.Generic.SortedDictionary<string, System.Text.StringBuilder>();
+      var names = new string[SourceFiles.Length];
+      for (int i = 0; i < SourceFiles.Length; i++) names[i] = SourceFiles[i].ItemSpec;
+      Array.Sort(names, StringComparer.Ordinal);
+      foreach (var encoded in names) {
+        var output = encoded.Substring(0, encoded.LastIndexOf(".b64."));
+        if (!groups.ContainsKey(output)) groups[output] = new System.Text.StringBuilder();
+        groups[output].Append(File.ReadAllText(encoded).Trim());
+      }
+      foreach (var pair in groups) {
+        var bytes = Convert.FromBase64String(pair.Value.ToString());
+        bool same = false;
+        if (File.Exists(pair.Key)) {
+          var prior = File.ReadAllBytes(pair.Key);
+          same = prior.Length == bytes.Length;
+          for (int i = 0; same && i < bytes.Length; i++) same = prior[i] == bytes[i];
+        }
+        if (!same) File.WriteAllBytes(pair.Key, bytes);
+      }
+    ]]></Code></Task>
+  </UsingTask>
+  <Target Name="RestoreSnowAssets" BeforeTargets="PrepareForBuild">
+    <ItemGroup><SnowAsset Include="$(MSBuildProjectDirectory)/Assets/*.b64.*" /></ItemGroup>
+    <RestoreSnowAssets SourceFiles="@(SnowAsset)" />
+  </Target>
+</Project>
